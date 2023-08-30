@@ -2,6 +2,7 @@ package main
 
 import (
 	"bufio"
+	"fmt"
 	"log"
 	"os"
 	"strconv"
@@ -19,7 +20,6 @@ func calculate(text string) string {
 		return proc(args, operator)
 	}
 
-	return ""
 }
 
 func proc(args []string, operator string) string {
@@ -122,5 +122,5 @@ func main() {
 	}
 	text = strings.TrimSpace(text)
 	text = strings.ReplaceAll(text, " ", "")
-	log.Print(calculate(text))
+	fmt.Println(calculate(text))
 }
