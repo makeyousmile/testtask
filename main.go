@@ -15,6 +15,13 @@ func calculate(text string) string {
 	operator := getOperator(text)
 	args, roman := getArgs(text)
 	if roman {
+		result, err := strconv.Atoi(proc(romanToNum(args), operator))
+		if err != nil {
+			log.Panicln(err)
+		}
+		if result < 1 {
+			log.Panicln("Нет римских чисел меньше 1")
+		}
 		return numToRoman(proc(romanToNum(args), operator))
 	} else {
 		return proc(args, operator)
@@ -25,12 +32,12 @@ func calculate(text string) string {
 func proc(args []string, operator string) string {
 	var result int
 	num1, err := strconv.Atoi(args[0])
-	if err != nil {
-		log.Fatalln(err)
+	if err != nil || num1 > 10 {
+		log.Panicln("не подходящее число")
 	}
 	num2, err := strconv.Atoi(args[1])
-	if err != nil {
-		log.Fatalln(err)
+	if err != nil || num2 > 10 {
+		log.Panicln("не подходящее число")
 	}
 	switch operator {
 	case "+":
@@ -41,7 +48,7 @@ func proc(args []string, operator string) string {
 		result = num1 * num2
 	case "/":
 		if num2 == 0 {
-			log.Fatalln("Деление на ноль")
+			log.Panicln("Деление на ноль")
 		}
 		result = num1 / num2
 
@@ -79,12 +86,12 @@ func getArgs(text string) ([]string, bool) {
 		if err != nil {
 			hasRoman = true
 			if hasNum {
-				log.Fatalln("Разные системы счисления")
+				log.Panicln("Разные системы счисления")
 			}
 		} else {
 			hasNum = true
 			if hasRoman {
-				log.Fatalln("Разные системы счисления")
+				log.Panicln("Разные системы счисления")
 			}
 		}
 	}
@@ -97,7 +104,7 @@ func getOperator(text string) string {
 		for _, val := range text {
 			if operator == string(val) {
 				if found {
-					log.Fatalln("Превышено количество операторов")
+					log.Panicln("Превышено количество операторов")
 
 				} else {
 					found = true
@@ -109,18 +116,21 @@ func getOperator(text string) string {
 		}
 	}
 	if !found {
-		log.Fatalln("Не найдено не одного оператора")
+		log.Panicln("Не найдено не одного оператора")
 	}
 	return result
 }
 func main() {
 	reader := bufio.NewReader(os.Stdin)
-
-	text, err := reader.ReadString('\n')
-	if err != nil {
-		log.Fatalln("Ошибка чтения строки консоли")
+	for {
+		text, err := reader.ReadString('\n')
+		if err != nil {
+			log.Panicln("Ошибка чтения строки консоли")
+		}
+		text = strings.TrimSpace(text)
+		text = strings.ReplaceAll(text, " ", "")
+		text = strings.ToUpper(text)
+		fmt.Println(calculate(text))
 	}
-	text = strings.TrimSpace(text)
-	text = strings.ReplaceAll(text, " ", "")
-	fmt.Println(calculate(text))
+
 }
