@@ -116,7 +116,7 @@ func getOperator(text string) string {
 		}
 	}
 	if !found {
-		log.Panicln("Не найдено не одного оператора")
+		log.Panicln("Не найдено ни одного оператора")
 	}
 	return result
 }
